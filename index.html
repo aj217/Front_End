@@ -25,6 +25,35 @@
       <h1>After School Classes</h1>
     </header>
     
+    <!-- Sorting -->
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+      <div class="d-flex">
+        <label for="sort" class="me-2">Sort by:</label>
+        <select v-model="sortBy" class="form-select w-auto">
+          <option value="subject">Subject</option>
+          <option value="location">Location</option>
+          <option value="price">Price</option>
+          <option value="spaces">Spaces</option>
+        </select>
+      </div>
+      <button @click="toggleSortOrder" class="btn btn-primary">
+        Sort Order: {{ sortOrder === 'asc' ? 'Ascending' : 'Descending'
+        }}
+      </button>
+    </div>
+
+    <div
+      v-if="sortedAndFilteredLessons.length === 0"
+      class="alert alert-warning"
+    >
+      No matches found for "{{ searchQuery }}"
+    </div>
+    <div v-else>
+      Showing {{ sortedAndFilteredLessons.length }} results for "{{
+      searchQuery }}"
+    </div>
+
+
                 <!-- Lessons List -->
                 <ul class="list-group">
                   <li
