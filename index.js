@@ -95,30 +95,29 @@ new Vue({
     },
     computed: {
         sortedAndFilteredLessons() {
-            // Convert the search query to lowercase for case-insensitive comparison
+            // Convert the search query to lowercase for case-insensitive matching
             const query = this.searchQuery.toLowerCase();
-
-            // Filter lessons based on whether any attribute matches the search query
-            let filtered = this.lessons.filter((lesson) => {
-                return (
-                    lesson.subject.toLowerCase().includes(query) ||
-                    lesson.location.toLowerCase().includes(query) ||
-                    lesson.price.toString().includes(query) ||
-                    lesson.spaces.toString().includes(query)
-                );
+      
+            // Filter lessons based on matching any attribute (subject, location, price, spaces)
+            let filtered = this.lessons.filter(lesson => {
+              return (
+                lesson.subject.toLowerCase().includes(query) ||
+                lesson.location.toLowerCase().includes(query) ||
+                lesson.price.toString().includes(query) ||
+                lesson.spaces.toString().includes(query)
+              );
             });
-
+      
             // Sort the filtered lessons
             let sorted = filtered.sort((a, b) => {
-                let modifier = this.sortOrder === "asc" ? 1 : -1;
-                if (a[this.sortBy] < b[this.sortBy]) return -1 * modifier;
-                if (a[this.sortBy] > b[this.sortBy]) return 1 * modifier;
-                return 0;
+              let modifier = this.sortOrder === "asc" ? 1 : -1;
+              if (a[this.sortBy] < b[this.sortBy]) return -1 * modifier;
+              if (a[this.sortBy] > b[this.sortBy]) return 1 * modifier;
+              return 0;
             });
-
+      
             return sorted;
-            return sorted;
-        },
+          },
 
         cartTotal() {
             return this.cart.reduce(
