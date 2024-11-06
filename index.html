@@ -100,6 +100,29 @@
     </div>
   </div>
 
+  <!-- Checkout Form with Validations -->
+  <div class="card p-4 mb-4">
+    <h3>Checkout</h3>
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input type="text" v-model="name" class="form-control" placeholder="Enter name" @input="validateName" />
+      <small class="text-danger" v-if="nameError">{{ nameError }}</small>
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone:</label>
+      <input type="text" v-model="phone" class="form-control" placeholder="Enter 10-digit phone number"
+        @input="validatePhone" />
+      <small class="text-danger" v-if="phoneError">{{ phoneError }}</small>
+    </div>
+    <button :disabled="!validCheckout" @click="submitCheckout" class="btn btn-primary">
+      Submit Order
+    </button>
+  </div>
+  </div>
+  </div>
+  </div>
+
+
 </body>
 
 </html>
