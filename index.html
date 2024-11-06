@@ -31,9 +31,9 @@
           class="btn btn-primary"
         >
           <i
-            :class="showCheckoutPage ? 'fas fa-arrow-left' : 'fas fa-shopping-cart'"
+            :class="showCheckoutPage ? 'fas fa-shopping-cart' : 'fas fa-shopping-cart'"
           ></i>
-          {{ showCheckoutPage ? 'Back to Lessons' : 'Proceed to Checkout' }}
+          {{ showCheckoutPage ? 'Checkout' : 'Checkout' }}
         </button>
       </div>
 
@@ -83,7 +83,7 @@
             <div class="d-flex align-items-center">
               <img
                 :src="lesson.image"
-                alt="Lesson Image"
+                alt="lesson Image"
                 class="lesson-image me-3"
               />
               <div>

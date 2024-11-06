@@ -8,7 +8,7 @@ new Vue({
                 location: "Hendon",
                 price: 100,
                 spaces: 5,
-                image: "/images/math.png",
+                image: "./images/math.png",
             },
             {
                 id: 2,
@@ -16,7 +16,7 @@ new Vue({
                 location: "Colindale",
                 price: 80,
                 spaces: 3,
-                image: "/images/english.png",
+                image: "./images/English.png",
             },
             {
                 id: 3,
@@ -24,7 +24,7 @@ new Vue({
                 location: "Brent Cross",
                 price: 120,
                 spaces: 2,
-                image: "/images/science.png",
+                image: "./images/Science.png",
             },
             {
                 id: 4,
@@ -32,7 +32,7 @@ new Vue({
                 location: "Golders Green",
                 price: 90,
                 spaces: 1,
-                image: "/images/history.png",
+                image: "./images/History.png",
             },
             {
                 id: 5,
@@ -40,7 +40,7 @@ new Vue({
                 location: "Hendon",
                 price: 75,
                 spaces: 0,
-                image: "/images/art.png",
+                image: "./images/art.png",
             },
             {
                 id: 6,
@@ -48,7 +48,7 @@ new Vue({
                 location: "Kingsbury",
                 price: 110,
                 spaces: 4,
-                image: "/images/music.png",
+                image: "./images/music.png",
             },
             {
                 id: 7,
@@ -56,7 +56,7 @@ new Vue({
                 location: "Harrow",
                 price: 150,
                 spaces: 2,
-                image: "/images/physics.png",
+                image: "./images/physics.png",
             },
             {
                 id: 8,
@@ -64,7 +64,7 @@ new Vue({
                 location: "Hendon",
                 price: 100,
                 spaces: 6,
-                image: "/images/chemistry.png",
+                image: "./images/chemistry.png",
             },
             {
                 id: 9,
@@ -72,7 +72,7 @@ new Vue({
                 location: "Wembley",
                 price: 130,
                 spaces: 4,
-                image: "/images/biology.png",
+                image: "./images/biology.png",
             },
             {
                 id: 10,
@@ -80,7 +80,7 @@ new Vue({
                 location: "Hendon",
                 price: 95,
                 spaces: 3,
-                image: "/images/geography.png",
+                image: "./images/geography.png",
             },
         ],
         cart: [],
@@ -132,4 +132,3 @@ new Vue({
         },
     },
 });
-
