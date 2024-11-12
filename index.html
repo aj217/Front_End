@@ -17,6 +17,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
+
   <body>
     <div id="app" class="container">
       <header class="text-center my-4">
@@ -86,8 +87,9 @@
                 <img
                   :src="lesson.image"
                   alt="Lesson Image"
-                  class="lesson-image me-3"
+                  class="lesson-image"
                 />
+
                 <div>
                   <h5>{{ lesson.subject }}</h5>
                   <p>Location: {{ lesson.location }}</p>
@@ -188,8 +190,9 @@
       </div>
     </div>
 
-    <!-- Vue.js and External Script -->
+    <!-- Vue.js and External Script and Axios -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
 </html>
