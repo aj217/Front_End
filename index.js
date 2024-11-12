@@ -50,6 +50,7 @@ new Vue({
           "http://localhost:5000/api/get-lessons"
         );
         this.lessons = response.data;
+        console.log(this.lessons); // Debugging line to confirm image paths
       } catch (error) {
         console.error("Failed to load lessons:", error);
       }
