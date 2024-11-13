@@ -73,12 +73,15 @@ new Vue({
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
     addToCart(lesson) {
+      // Check if there are remaining spaces for this lesson
       if (lesson.spaces > 0) {
-        lesson.spaces -= 1;
-        const itemInCart = this.cart.find((item) => item.id === lesson.id);
+        lesson.spaces -= 1; // Decrease available spaces in the lesson list
+  
+        const itemInCart = this.cart.find(item => item._id === lesson._id);
         if (itemInCart) {
           itemInCart.quantity += 1;
         } else {
+          // Add the lesson to the cart with a quantity of 1
           this.cart.push({ ...lesson, quantity: 1 });
         }
       }
@@ -100,13 +103,18 @@ new Vue({
       }
     },
     removeFromCart(item) {
-      const lesson = this.lessons.find((lesson) => lesson.id === item.id);
-      lesson.spaces += item.quantity;
-      this.cart = this.cart.filter((cartItem) => cartItem.id !== item.id);
+      const lesson = this.lessons.find(lesson => lesson._id === item._id);
+      if (lesson) {
+        lesson.spaces += item.quantity; // Restore all spaces back to the lesson
+      }
+      this.cart = this.cart.filter(cartItem => cartItem._id !== item._id);
+  
+      // Automatically go back to lesson list if cart becomes empty
       if (this.cart.length === 0) {
         this.showCheckoutPage = false;
       }
     },
+  
     toggleCheckoutPage() {
       if (this.cart.length > 0 || this.showCheckoutPage) {
         this.showCheckoutPage = !this.showCheckoutPage;
