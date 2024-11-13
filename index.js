@@ -114,12 +114,14 @@ new Vue({
         this.showCheckoutPage = false;
       }
     },
-  
     toggleCheckoutPage() {
-      if (this.cart.length > 0 || this.showCheckoutPage) {
+      if (this.cart.length > 0) {
         this.showCheckoutPage = !this.showCheckoutPage;
+      } else {
+        alert("Add items to the cart to proceed to checkout.");
       }
     },
+    
     async submitCheckout() {
       const orderData = {
         name: this.name,
