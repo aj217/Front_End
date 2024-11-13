@@ -46,29 +46,35 @@ new Vue({
   methods: {
     async loadLessons() {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/get-lessons"
-        );
-        this.lessons = response.data;
-        console.log(this.lessons); // Debugging line to confirm image paths
+        const response = await fetch("http://localhost:5000/api/get-lessons");
+        if (!response.ok) {
+          throw new Error("Failed to fetch lessons");
+        }
+        this.lessons = await response.json();
       } catch (error) {
         console.error("Failed to load lessons:", error);
       }
     },
-    // Method to update a lesson
+    
     async updateLesson(lessonId, updateData) {
       try {
-        const response = await axios.put(
-          `http://localhost:5000/api/update-lesson/${lessonId}`,
-          updateData
-        );
+        const response = await fetch(`http://localhost:5000/api/update-lesson/${lessonId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(updateData)
+        });
+        if (!response.ok) {
+          throw new Error("Failed to update lesson");
+        }
         alert("Lesson updated successfully!");
-        this.loadLessons(); // Refresh lesson list to show updated data
+        this.loadLessons(); // Refresh lessons list after update
       } catch (error) {
         console.error("Failed to update lesson:", error);
-        alert("Error updating lesson.");
       }
     },
+    
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
@@ -127,24 +133,31 @@ new Vue({
         name: this.name,
         phone: this.phone,
         lessonIDs: this.cart.map((item) => item.id),
-        number_of_spaces: this.cart.reduce(
-          (total, item) => total + item.quantity,
-          0
-        ),
+        number_of_spaces: this.cart.reduce((total, item) => total + item.quantity, 0)
       };
+    
       try {
-        await axios.post("http://localhost:5000/api/add-order", orderData);
+        const response = await fetch("http://localhost:5000/api/add-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(orderData)
+        });
+        if (!response.ok) {
+          throw new Error("Failed to submit order");
+        }
         alert(`Order for ${this.name} submitted successfully!`);
         this.cart = [];
         this.name = "";
         this.phone = "";
         this.showCheckoutPage = false;
-        this.loadLessons(); // Refresh lesson list
+        this.loadLessons(); // Refresh lessons list after order submission
       } catch (error) {
         console.error("Failed to submit order:", error);
-        alert("Error submitting order.");
       }
     },
+    
     validateName() {
       const nameRegex = /^[A-Za-z\s]+$/;
       this.nameError = nameRegex.test(this.name)
