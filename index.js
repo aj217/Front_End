@@ -17,6 +17,7 @@ new Vue({
   computed: {
     sortedAndFilteredLessons() {
       const query = this.searchQuery.toLowerCase();
+      // Filter lessons based on search query
       let filtered = this.lessons.filter((lesson) => {
         return (
           lesson.subject.toLowerCase().includes(query) ||
@@ -25,6 +26,7 @@ new Vue({
           lesson.spaces.toString().includes(query)
         );
       });
+      // Sort the filtered lessons
       let sorted = filtered.sort((a, b) => {
         let modifier = this.sortOrder === "asc" ? 1 : -1;
         if (a[this.sortBy] < b[this.sortBy]) return -1 * modifier;
@@ -34,12 +36,11 @@ new Vue({
       return sorted;
     },
     cartTotal() {
-      return this.cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
+      // Calculate total cost of items in cart
+      return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     },
     validCheckout() {
+      // Check for valid checkout inputs and no errors
       return this.name && this.phone && !this.nameError && !this.phoneError;
     },
   },
@@ -53,6 +54,7 @@ new Vue({
         this.lessons = await response.json();
       } catch (error) {
         console.error("Failed to load lessons:", error);
+        alert("Could not load lessons. Please try again later.");
       }
     },
     
@@ -78,48 +80,49 @@ new Vue({
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
+    
     addToCart(lesson) {
-      // Check if there are remaining spaces for this lesson
       if (lesson.spaces > 0) {
-        lesson.spaces -= 1; // Decrease available spaces in the lesson list
-  
+        lesson.spaces -= 1;
         const itemInCart = this.cart.find(item => item._id === lesson._id);
         if (itemInCart) {
           itemInCart.quantity += 1;
         } else {
-          // Add the lesson to the cart with a quantity of 1
           this.cart.push({ ...lesson, quantity: 1 });
         }
       }
     },
+    
     incrementItemInCart(item) {
-      const lesson = this.lessons.find((lesson) => lesson.id === item.id);
-      if (item.quantity < lesson.spaces + item.quantity) {
+      const lesson = this.lessons.find((lesson) => lesson._id === item._id);
+      if (lesson && item.quantity < lesson.spaces + item.quantity) {
         item.quantity += 1;
         lesson.spaces -= 1;
       }
     },
+    
     decrementItem(item) {
-      const lesson = this.lessons.find((lesson) => lesson.id === item.id);
-      if (item.quantity > 1) {
+      const lesson = this.lessons.find((lesson) => lesson._id === item._id);
+      if (lesson && item.quantity > 1) {
         item.quantity -= 1;
         lesson.spaces += 1;
       } else {
         this.removeFromCart(item);
       }
     },
+    
     removeFromCart(item) {
       const lesson = this.lessons.find(lesson => lesson._id === item._id);
       if (lesson) {
-        lesson.spaces += item.quantity; // Restore all spaces back to the lesson
+        lesson.spaces += item.quantity;
       }
       this.cart = this.cart.filter(cartItem => cartItem._id !== item._id);
-  
-      // Automatically go back to lesson list if cart becomes empty
+
       if (this.cart.length === 0) {
         this.showCheckoutPage = false;
       }
     },
+    
     toggleCheckoutPage() {
       if (this.cart.length > 0) {
         this.showCheckoutPage = !this.showCheckoutPage;
@@ -132,7 +135,7 @@ new Vue({
       const orderData = {
         name: this.name,
         phone: this.phone,
-        lessonIDs: this.cart.map((item) => item.id),
+        lessonIDs: this.cart.map((item) => item._id),  // Consistent use of _id
         number_of_spaces: this.cart.reduce((total, item) => total + item.quantity, 0)
       };
     
@@ -164,6 +167,7 @@ new Vue({
         ? ""
         : "Name must contain only letters and spaces.";
     },
+    
     validatePhone() {
       const phoneRegex = /^[0-9]{10}$/;
       this.phoneError = phoneRegex.test(this.phone)
