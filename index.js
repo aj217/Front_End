@@ -50,7 +50,14 @@ new Vue({
   methods: {
     async loadLessons() {
       try {
-        const response = await fetch("http://localhost:5000/api/get-lessons");
+        // If there’s a search query, send it to the search endpoint
+        const url = this.searchQuery
+          ? `http://localhost:5000/api/search?q=${encodeURIComponent(
+              this.searchQuery
+            )}`
+          : "http://localhost:5000/api/get-lessons";
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error("Failed to fetch lessons");
         }
@@ -59,6 +66,11 @@ new Vue({
         console.error("Failed to load lessons:", error);
         alert("Could not load lessons. Please try again later.");
       }
+    },
+
+    // Method to trigger loading of lessons based on search input
+    handleSearch() {
+      this.loadLessons(); // Calls loadLessons() with the current searchQuery
     },
 
     async updateLesson(lessonId, updateData) {

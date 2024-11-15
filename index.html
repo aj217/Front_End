@@ -46,6 +46,7 @@
           <input
             type="text"
             v-model="searchQuery"
+            @input="handleSearch"
             class="form-control"
             placeholder="Search by subject, location, price, or spaces..."
             aria-label="Search lessons"
