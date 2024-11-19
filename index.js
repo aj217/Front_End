@@ -50,18 +50,23 @@ new Vue({
   methods: {
     async loadLessons() {
       try {
-        // If there’s a search query, send it to the search endpoint
+        // Fetch lessons from the backend
         const url = this.searchQuery
-          ? `http://localhost:5000/api/search?q=${encodeURIComponent(
+          ? `http://localhost:5001/api/search?q=${encodeURIComponent(
               this.searchQuery
             )}`
-          : "http://localhost:5000/api/get-lessons";
+          : "http://localhost:5001/api/get-lessons";
 
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error("Failed to fetch lessons");
         }
-        this.lessons = await response.json();
+        const lessons = await response.json();
+        // Update image paths to use backend's `/images` endpoint
+        this.lessons = lessons.map((lesson) => ({
+          ...lesson,
+          image: `http://localhost:5001/images/${lesson.image}`,
+        }));
       } catch (error) {
         console.error("Failed to load lessons:", error);
         alert("Could not load lessons. Please try again later.");
@@ -76,7 +81,7 @@ new Vue({
     async updateLesson(lessonId, updateData) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/update-lesson/${lessonId}`,
+          `http://localhost:5001/api/update-lesson/${lessonId}`,
           {
             method: "PUT",
             headers: {
@@ -161,7 +166,7 @@ new Vue({
       };
 
       try {
-        const response = await fetch("http://localhost:5000/api/add-order", {
+        const response = await fetch("http://localhost:5001/api/add-order", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
