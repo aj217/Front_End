@@ -12,22 +12,13 @@ new Vue({
       showCheckoutPage: false,
       nameError: "",
       phoneError: "",
+      debounceTimer: null, // Timer for debouncing search input
     };
   },
   computed: {
     sortedAndFilteredLessons() {
-      const query = this.searchQuery.toLowerCase();
-      // Filter lessons based on search query
-      let filtered = this.lessons.filter((lesson) => {
-        return (
-          lesson.subject.toLowerCase().includes(query) ||
-          lesson.location.toLowerCase().includes(query) ||
-          lesson.price.toString().includes(query) ||
-          lesson.spaces.toString().includes(query)
-        );
-      });
-      // Sort the filtered lessons
-      let sorted = filtered.sort((a, b) => {
+      // Use lessons already filtered from the backend
+      let sorted = this.lessons.sort((a, b) => {
         let modifier = this.sortOrder === "asc" ? 1 : -1;
         if (a[this.sortBy] < b[this.sortBy]) return -1 * modifier;
         if (a[this.sortBy] > b[this.sortBy]) return 1 * modifier;
@@ -36,25 +27,20 @@ new Vue({
       return sorted;
     },
     cartTotal() {
-      // Calculate total cost of items in cart
       return this.cart.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       );
     },
     validCheckout() {
-      // Check for valid checkout inputs and no errors
       return this.name && this.phone && !this.nameError && !this.phoneError;
     },
   },
   methods: {
-    async loadLessons() {
+    async loadLessons(query = "") {
       try {
-        // Fetch lessons from the backend
-        const url = this.searchQuery
-          ? `http://localhost:5001/api/search?q=${encodeURIComponent(
-              this.searchQuery
-            )}`
+        const url = query
+          ? `http://localhost:5001/api/search?q=${encodeURIComponent(query)}`
           : "http://localhost:5001/api/get-lessons";
 
         const response = await fetch(url);
@@ -62,7 +48,6 @@ new Vue({
           throw new Error("Failed to fetch lessons");
         }
         const lessons = await response.json();
-        // Update image paths to use backend's `/images` endpoint
         this.lessons = lessons.map((lesson) => ({
           ...lesson,
           image: `http://localhost:5001/images/${lesson.image}`,
@@ -73,33 +58,14 @@ new Vue({
       }
     },
 
-    // Method to trigger loading of lessons based on search input
     handleSearch() {
-      this.loadLessons(); // Calls loadLessons() with the current searchQuery
+      clearTimeout(this.debounceTimer); // Clear previous timer
+      this.debounceTimer = setTimeout(() => {
+        this.loadLessons(this.searchQuery); // Fetch lessons after delay
+      }, 300); // Adjust debounce time as needed (300ms here)
     },
 
-    async updateLesson(lessonId, updateData) {
-      try {
-        const response = await fetch(
-          `http://localhost:5001/api/update-lesson/${lessonId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updateData),
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to update lesson");
-        }
-        alert("Lesson updated successfully!");
-        this.loadLessons(); // Refresh lessons list after update
-      } catch (error) {
-        console.error("Failed to update lesson:", error);
-      }
-    },
-
+    // Other methods remain unchanged
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
@@ -158,7 +124,7 @@ new Vue({
       const orderData = {
         name: this.name,
         phone: this.phone,
-        lessonIDs: this.cart.map((item) => item._id), // Consistent use of _id
+        lessonIDs: this.cart.map((item) => item._id),
         number_of_spaces: this.cart.reduce(
           (total, item) => total + item.quantity,
           0
@@ -181,7 +147,7 @@ new Vue({
         this.name = "";
         this.phone = "";
         this.showCheckoutPage = false;
-        this.loadLessons(); // Refresh lessons list after order submission
+        this.loadLessons();
       } catch (error) {
         console.error("Failed to submit order:", error);
       }
@@ -202,6 +168,6 @@ new Vue({
     },
   },
   mounted() {
-    this.loadLessons(); // Load lessons when app starts
+    this.loadLessons(); // Load all lessons initially
   },
 });
