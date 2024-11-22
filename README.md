@@ -6,6 +6,9 @@ This project is a full-stack web application that allows students and parents to
 # Github reopository link
 https://github.com/aj217/Front_End.git
 
+# [Vue.js App] the link to GitHub Pages from where the app can directly run.
+https://aj217.github.io/Front_End/
+
 ## Features of the Front-End
 - **Lesson List**: Displays all available lessons with attributes such as subject, location, price, and available spaces.
 - **Search Functionality**: Users can search lessons by any keyword (subject, location, price, spaces).
