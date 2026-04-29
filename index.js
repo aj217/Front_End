@@ -2,7 +2,7 @@ new Vue({
   el: "#app",
   data() {
     return {
-      lessons: [], // Initially empty; will be loaded from the backend
+      lessons: [],
       cart: [],
       name: "",
       phone: "",
@@ -12,12 +12,11 @@ new Vue({
       showCheckoutPage: false,
       nameError: "",
       phoneError: "",
-      debounceTimer: null, // Timer for debouncing search input
+      debounceTimer: null,
     };
   },
   computed: {
     sortedAndFilteredLessons() {
-      // Use lessons already filtered from the backend
       let sorted = this.lessons.sort((a, b) => {
         let modifier = this.sortOrder === "asc" ? 1 : -1;
         if (a[this.sortBy] < b[this.sortBy]) return -1 * modifier;
@@ -40,8 +39,8 @@ new Vue({
     async loadLessons(query = "") {
       try {
         const url = query
-          ? `http://localhost:5001/api/search?q=${encodeURIComponent(query)}`
-          : "http://localhost:5001/api/get-lessons";
+          ? `https://back-end-5hwg.onrender.com/api/search?q=${encodeURIComponent(query)}`
+          : "https://back-end-5hwg.onrender.com/api/get-lessons";
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -50,7 +49,7 @@ new Vue({
         const lessons = await response.json();
         this.lessons = lessons.map((lesson) => ({
           ...lesson,
-          image: `http://localhost:5001/images/${lesson.image}`,
+          image: `https://back-end-5hwg.onrender.com/images/${lesson.image}`,
         }));
       } catch (error) {
         console.error("Failed to load lessons:", error);
@@ -59,13 +58,12 @@ new Vue({
     },
 
     handleSearch() {
-      clearTimeout(this.debounceTimer); // Clear previous timer
+      clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => {
-        this.loadLessons(this.searchQuery); // Fetch lessons after delay
-      }, 300); // Adjust debounce time as needed (300ms here)
+        this.loadLessons(this.searchQuery);
+      }, 300);
     },
 
-    // Other methods remain unchanged
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
@@ -106,7 +104,6 @@ new Vue({
         lesson.spaces += item.quantity;
       }
       this.cart = this.cart.filter((cartItem) => cartItem._id !== item._id);
-
       if (this.cart.length === 0) {
         this.showCheckoutPage = false;
       }
@@ -132,7 +129,7 @@ new Vue({
       };
 
       try {
-        const response = await fetch("http://localhost:5001/api/add-order", {
+        const response = await fetch("https://back-end-5hwg.onrender.com/api/add-order", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -168,6 +165,6 @@ new Vue({
     },
   },
   mounted() {
-    this.loadLessons(); // Load all lessons initially
+    this.loadLessons();
   },
 });
